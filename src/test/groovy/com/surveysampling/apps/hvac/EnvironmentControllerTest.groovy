@@ -4,7 +4,6 @@ import com.surveysampling.apps.hvac.hardware.EnvironmentController
 import spock.lang.Specification
 import spock.lang.Unroll
 
-
 class EnvironmentControllerTest extends Specification {
     FakeHVAC fakeHVAC = new FakeHVAC()
     EnvironmentController environmentController = new EnvironmentController(fakeHVAC);

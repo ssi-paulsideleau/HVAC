@@ -1,7 +1,6 @@
 package com.surveysampling.apps.hvac.hardware;
 
 public class EnvironmentController {
-
     private HVAC hvac;
 
     public EnvironmentController(HVAC hvac) {

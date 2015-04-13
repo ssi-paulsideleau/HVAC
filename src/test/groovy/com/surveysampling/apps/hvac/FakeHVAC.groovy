@@ -2,10 +2,7 @@ package com.surveysampling.apps.hvac
 
 import com.surveysampling.apps.hvac.hardware.HVAC
 
-
 public class FakeHVAC implements HVAC {
-
-
     boolean heatOn;
     boolean coolOn
     boolean fanOn
