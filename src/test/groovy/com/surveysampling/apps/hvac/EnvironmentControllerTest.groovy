@@ -18,9 +18,9 @@ class EnvironmentControllerTest extends Specification {
         environmentController.tick();
 
         then:
-        !fakeHVAC.heatCalled
-        !fakeHVAC.coolCalled
-        !fakeHVAC.fanCalled
+        !fakeHVAC.heatOn
+        !fakeHVAC.coolOn
+        !fakeHVAC.fanOn
 
         where:
         currentTemp << (65..75)
@@ -30,14 +30,13 @@ class EnvironmentControllerTest extends Specification {
         given:
         fakeHVAC.currentTemp = 64
         fakeHVAC.heatOn = false
+        fakeHVAC.fanOn = false
 
         when:
         environmentController.tick();
 
         then:
-        fakeHVAC.heatCalled
-        !fakeHVAC.coolCalled
-        !fakeHVAC.fanCalled
         fakeHVAC.heatOn
+        fakeHVAC.fanOn
     }
 }
