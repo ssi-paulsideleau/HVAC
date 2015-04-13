@@ -10,7 +10,7 @@ class EnvironmentControllerTest extends Specification {
     EnvironmentController environmentController = new EnvironmentController(fakeHVAC);
 
     @Unroll
-    def "should do nothing"() {
+    def "should do nothing when temp is *currentTemp"() {
         given:
         fakeHVAC.currentTemp = currentTemp
 
@@ -26,10 +26,12 @@ class EnvironmentControllerTest extends Specification {
         currentTemp << (65..75)
     }
 
-    def "should turn on heat when temp is below 65"() {
+    @Unroll
+    def "should turn on heat when temp is *currentTemp <= 64"() {
         given:
-        fakeHVAC.currentTemp = 64
+        fakeHVAC.currentTemp = currentTemp
         fakeHVAC.heatOn = false
+        fakeHVAC.coolOn = false
         fakeHVAC.fanOn = false
 
         when:
@@ -37,6 +39,30 @@ class EnvironmentControllerTest extends Specification {
 
         then:
         fakeHVAC.heatOn
+        !fakeHVAC.coolOn
         fakeHVAC.fanOn
+
+        where:
+        currentTemp << [45, 55, 64]
+    }
+
+    @Unroll
+    def "should turn on cool when temp is *currentTemp >= 76"() {
+        given:
+        fakeHVAC.currentTemp = currentTemp
+        fakeHVAC.heatOn = false
+        fakeHVAC.coolOn = false
+        fakeHVAC.fanOn = false
+
+        when:
+        environmentController.tick();
+
+        then:
+        !fakeHVAC.heatOn
+        fakeHVAC.coolOn
+        fakeHVAC.fanOn
+
+        where:
+        currentTemp << [76, 85, 94]
     }
 }
