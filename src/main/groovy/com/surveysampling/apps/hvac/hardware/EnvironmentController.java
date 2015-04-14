@@ -16,5 +16,10 @@ public class EnvironmentController {
             hvac.cool(true);
             hvac.fan(true);
         }
+        if(hvac.temp() >= 65 && hvac.temp() <= 75) {
+            hvac.heat(false);
+            hvac.cool(false);
+            hvac.fan(false);
+        }
     }
 }

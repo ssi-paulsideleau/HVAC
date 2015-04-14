@@ -46,6 +46,26 @@ class EnvironmentControllerTest extends Specification {
     }
 
     @Unroll
+    def "should turn off heat and fan when temp becomes *currentTemp"() {
+        given:
+        fakeHVAC.currentTemp = currentTemp
+        fakeHVAC.heatOn = true
+        fakeHVAC.coolOn = false
+        fakeHVAC.fanOn = true
+
+        when:
+        environmentController.tick();
+
+        then:
+        !fakeHVAC.heatOn
+        !fakeHVAC.coolOn
+        !fakeHVAC.fanOn
+
+        where:
+        currentTemp << [65, 70, 75]
+    }
+
+    @Unroll
     def "should turn on cool when temp is *currentTemp >= 76"() {
         given:
         fakeHVAC.currentTemp = currentTemp
