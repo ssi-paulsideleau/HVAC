@@ -239,6 +239,22 @@ class EnvironmentControllerTest extends Specification {
         fakeHVAC.fanOn == false
     }
 
+    def "should not turn fan on after 2 cooler on/off cycles"() {
+        given:
+        forceCoolOn()
+        forceCoolOff()
+        4.times { environmentController.tick() }
+        forceCoolOn()
+        forceCoolOff()
+        fakeHVAC.currentTemp = 80
+
+        when:
+        environmentController.tick()
+
+        then:
+        fakeHVAC.fanOn == false
+    }
+
     private void forceHeatOn() {
         fakeHVAC.currentTemp = 40
         environmentController.tick()
@@ -249,5 +265,17 @@ class EnvironmentControllerTest extends Specification {
         fakeHVAC.currentTemp = 70
         environmentController.tick()
         assert fakeHVAC.heatOn == false
+    }
+
+    private void forceCoolOn() {
+        fakeHVAC.currentTemp = 80
+        environmentController.tick()
+        assert fakeHVAC.coolOn == true
+    }
+
+    private void forceCoolOff() {
+        fakeHVAC.currentTemp = 70
+        environmentController.tick()
+        assert fakeHVAC.coolOn == false
     }
 }

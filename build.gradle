@@ -8,6 +8,9 @@
  */
 
 // Apply the groovy plugin to add support for Groovy
+plugins {
+    id "info.solidsoft.pitest" version "1.1.4"
+}
 apply plugin: 'groovy'
 apply plugin: 'application'
 
@@ -28,6 +31,12 @@ dependencies {
     // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
     testCompile 'junit:junit:4.12'
+}
+
+pitest {
+    targetClasses = ['com.surveysampling.apps.hvac.*']
+    threads = 4
+    outputFormats = ['HTML']
 }
 
 run {
