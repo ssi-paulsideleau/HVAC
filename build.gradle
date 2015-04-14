@@ -9,6 +9,9 @@
 
 // Apply the groovy plugin to add support for Groovy
 apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = 'com.surveysampling.apps.hvac.HVACDriver'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -25,4 +28,12 @@ dependencies {
     // We use the awesome Spock testing and specification framework
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
     testCompile 'junit:junit:4.12'
+}
+
+run {
+    if (project.hasProperty('args')) {
+        args(project.args.split(','))
+    }
+    systemProperties = [ "min": System.getProperty("min"),
+                         "max": System.getProperty("max")]
 }
