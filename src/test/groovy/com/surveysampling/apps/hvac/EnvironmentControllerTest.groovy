@@ -105,30 +105,37 @@ class EnvironmentControllerTest extends Specification {
         currentTemp << [65, 70, 75]
     }
 
-    def "should increment tick minutes when tick is called"() {
+    @Unroll
+    def "should not turn fan on if fan is on heater cool down"() {
         given:
-        environmentController.tickMinutesSinceHeatFanOff = 0;
-        environmentController.tickMinutesSinceCoolFanOff = 0;
+        fakeHVAC.currentTemp = 65
+        environmentController.tick()
+        fakeHVAC.currentTemp = 64
 
         when:
-        5.times{ environmentController.tick() };
+        ticks.times { environmentController.tick(); }
 
         then:
-        environmentController.tickMinutesSinceHeatFanOff == 5;
-        environmentController.tickMinutesSinceCoolFanOff == 5;
+        !fakeHVAC.fanOn
+
+        where:
+        ticks << (0..4)
     }
 
-    def "should reset when fan off"() {
+    @Unroll
+    def "should not turn fan on if fan is on cooler cool down"() {
         given:
-        environmentController.tickMinutesSinceHeatFanOff = 5;
-        environmentController.tickMinutesSinceCoolFanOff = 5;
-        fakeHVAC.currentTemp = 70
+        fakeHVAC.currentTemp = 75
+        environmentController.tick()
+        fakeHVAC.currentTemp = 76
 
         when:
-        environmentController.tick();
+        ticks.times { environmentController.tick(); }
 
         then:
-        environmentController.tickMinutesSinceHeatFanOff == 0;
-        environmentController.tickMinutesSinceCoolFanOff == 0;
+        !fakeHVAC.fanOn
+
+        where:
+        ticks << (0..2)
     }
 }
