@@ -18,6 +18,7 @@ public class SocketWrapper implements java.lang.AutoCloseable {
     try {
       serverSocket = new ServerSocket(this.port);
       socket = serverSocket.accept();
+      System.out.println("socket created "+socket);
 
       PrintWriter out = new PrintWriter(socket.getOutputStream());
       BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -31,7 +32,7 @@ public class SocketWrapper implements java.lang.AutoCloseable {
 
   public void close() {
     try {
-      System.out.println("closing");
+      System.out.println("closing SocketWrapper "+socket);
       socket.close();
       serverSocket.close();
     } catch (Exception e) {

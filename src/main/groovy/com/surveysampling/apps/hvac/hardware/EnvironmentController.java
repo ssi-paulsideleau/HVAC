@@ -1,5 +1,7 @@
 package com.surveysampling.apps.hvac.hardware;
 
+import com.paytonrules.SocketWrapper;
+
 public class EnvironmentController {
     private HVAC hvac;
 
@@ -11,6 +13,9 @@ public class EnvironmentController {
     private int max = 75;
     private boolean heatOn = false;
     private boolean coolOn = false;
+
+    private SocketWrapper socketWrapper;
+    private Thread socketThread;
 
     public EnvironmentController(HVAC hvac) {
         this.hvac = hvac;
