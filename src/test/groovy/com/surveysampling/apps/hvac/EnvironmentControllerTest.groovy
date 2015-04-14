@@ -1,6 +1,7 @@
 package com.surveysampling.apps.hvac
 
 import com.surveysampling.apps.hvac.hardware.EnvironmentController
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -108,6 +109,8 @@ class EnvironmentControllerTest extends Specification {
     @Unroll
     def "should not turn fan on if fan is on heater cool down"() {
         given:
+        fakeHVAC.currentTemp = 64
+        environmentController.tick()
         fakeHVAC.currentTemp = 65
         environmentController.tick()
         fakeHVAC.currentTemp = 64
@@ -116,15 +119,91 @@ class EnvironmentControllerTest extends Specification {
         ticks.times { environmentController.tick(); }
 
         then:
-        !fakeHVAC.fanOn
+        fakeHVAC.fanOn == fanTurnedOn
 
         where:
-        ticks << (0..4)
+        ticks | fanTurnedOn
+        0     | false
+        1     | false
+        2     | false
+        3     | false
+        4     | false
+        5     | true
+    }
+
+    def "heater cool down should not affect cooler timer"() {
+        when:
+        fakeHVAC.currentTemp = 65
+        environmentController.tick()
+        fakeHVAC.currentTemp = 64
+
+        then:
+        environmentController.coolerFanTimer.canRun() == true
+    }
+
+    def "cooler cool down should not affect heater timer"() {
+        when:
+        fakeHVAC.currentTemp = 76
+        environmentController.tick()
+        fakeHVAC.currentTemp = 75
+
+        then:
+        environmentController.heaterFanTimer.canRun() == true
+    }
+
+    @Unroll
+    def "should turn on heaters fan if coolers fan timer can run after #ticks ticks"() {
+        given:
+        fakeHVAC.currentTemp = 76
+        environmentController.tick()
+        fakeHVAC.currentTemp = 75
+        environmentController.tick()
+        fakeHVAC.currentTemp = 64
+
+        when:
+        ticks.times { environmentController.tick(); }
+
+        then:
+        fakeHVAC.fanOn == fanTurnedOn
+
+        where:
+        ticks | fanTurnedOn
+        1     | false
+        2     | false
+        3     | true
+        4     | true
+        5     | true
+    }
+
+    @Unroll
+    def "coolers fan should be #fanTurnedOn if heaters fan timer can run after #ticks ticks"() {
+        given:
+        fakeHVAC.currentTemp = 64
+        environmentController.tick()
+        fakeHVAC.currentTemp = 65
+        environmentController.tick()
+        fakeHVAC.currentTemp = 76
+
+        when:
+        ticks.times { environmentController.tick(); }
+
+        then:
+        fakeHVAC.fanOn == fanTurnedOn
+
+        where:
+        ticks | fanTurnedOn
+        1     | false
+        2     | false
+        3     | false
+        4     | false
+        5     | true
     }
 
     @Unroll
     def "should not turn fan on if fan is on cooler cool down"() {
         given:
+        fakeHVAC.currentTemp = 76
+        environmentController.tick()
         fakeHVAC.currentTemp = 75
         environmentController.tick()
         fakeHVAC.currentTemp = 76
@@ -133,9 +212,42 @@ class EnvironmentControllerTest extends Specification {
         ticks.times { environmentController.tick(); }
 
         then:
-        !fakeHVAC.fanOn
+        fakeHVAC.fanOn == fanTurnedOn
 
         where:
-        ticks << (0..2)
+        ticks | fanTurnedOn
+        0     | false
+        1     | false
+        2     | false
+        3     | true
+        4     | true
+    }
+
+    def "should not turn fan on after 2 heater on/off cycles"() {
+        given:
+        forceHeatOn()
+        forceHeatOff()
+        4.times { environmentController.tick() }
+        forceHeatOn()
+        forceHeatOff()
+        fakeHVAC.currentTemp = 40
+
+        when:
+        environmentController.tick()
+
+        then:
+        fakeHVAC.fanOn == false
+    }
+
+    private void forceHeatOn() {
+        fakeHVAC.currentTemp = 40
+        environmentController.tick()
+        assert fakeHVAC.heatOn == true
+    }
+
+    private void forceHeatOff() {
+        fakeHVAC.currentTemp = 70
+        environmentController.tick()
+        assert fakeHVAC.heatOn == false
     }
 }

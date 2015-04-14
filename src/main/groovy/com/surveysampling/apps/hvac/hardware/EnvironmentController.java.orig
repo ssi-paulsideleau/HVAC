@@ -5,12 +5,18 @@ public class EnvironmentController {
 
     private static final int HEAT_FAN_COOL_DOWN_PERIOD = 5;
     private static final int COOL_FAN_COOL_DOWN_PERIOD = 3;
-    FanTimer heaterFanTimer;
-    FanTimer coolerFanTimer;
+<<<<<<< HEAD
+    private FanTimer heaterFanTimer;
+    private FanTimer coolerFanTimer;
     private int min = 65;
     private int max = 75;
+
+=======
+    FanTimer heaterFanTimer;
+    FanTimer coolerFanTimer;
     private boolean heatOn = false;
     private boolean coolOn = false;
+>>>>>>> expand testing suite
 
     public EnvironmentController(HVAC hvac) {
         this.hvac = hvac;
@@ -49,7 +55,10 @@ public class EnvironmentController {
     }
 
     private void turnOffIfInRange() {
+<<<<<<< HEAD
         if(hvac.temp() >= min && hvac.temp() <= max) {
+=======
+        if(hvac.temp() >= 65 && hvac.temp() <= 75) {
             if(heatOn) {
                 heatOn = false;
                 heaterFanTimer.start();
@@ -58,6 +67,7 @@ public class EnvironmentController {
                 coolOn = false;
                 coolerFanTimer.start();
             }
+>>>>>>> expand testing suite
             hvac.heat(false);
             hvac.cool(false);
             hvac.fan(false);
