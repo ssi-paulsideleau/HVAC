@@ -3,8 +3,6 @@ package com.surveysampling.apps.hvac;
 import com.surveysampling.apps.hvac.hardware.DummyHVAC;
 import com.surveysampling.apps.hvac.hardware.EnvironmentController;
 
-import java.util.Arrays;
-
 public class HVACDriver {
     public static void main(String[] args) {
         System.out.println(args[0]);

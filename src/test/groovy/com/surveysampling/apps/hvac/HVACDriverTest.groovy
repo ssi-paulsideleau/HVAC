@@ -18,6 +18,6 @@ class HVACDriverTest extends Specification {
         then:
         controller != null
         controller.min == low
-        controller.max == high
+        controller.max == max
     }
 }
