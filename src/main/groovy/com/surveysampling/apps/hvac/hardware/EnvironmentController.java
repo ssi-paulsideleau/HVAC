@@ -84,4 +84,20 @@ public class EnvironmentController {
     public void setMax(int max) {
         this.max = max;
     }
+
+    public void setServerPortAndStart(int port) {
+        socketWrapper = new SocketWrapper(port);
+        socketThread = new Thread() {
+            public void run() {
+                socketWrapper.start();
+            }
+        };
+        socketThread.start();
+    }
+
+    public void stopServer(){
+        if(socketWrapper!=null){
+            socketWrapper.close();
+        }
+    }
 }
