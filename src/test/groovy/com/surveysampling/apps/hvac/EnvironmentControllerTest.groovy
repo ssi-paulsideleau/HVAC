@@ -9,7 +9,7 @@ class EnvironmentControllerTest extends Specification {
     EnvironmentController environmentController = new EnvironmentController(fakeHVAC);
 
     @Unroll
-    def "should do nothing when temp is *currentTemp"() {
+    def "should do nothing when temp is #currentTemp"() {
         given:
         fakeHVAC.currentTemp = currentTemp
 
@@ -26,7 +26,7 @@ class EnvironmentControllerTest extends Specification {
     }
 
     @Unroll
-    def "should turn on heat when temp is *currentTemp <= 64"() {
+    def "should turn on heat when temp is #currentTemp <= 64"() {
         given:
         fakeHVAC.currentTemp = currentTemp
         fakeHVAC.heatOn = false
@@ -46,7 +46,7 @@ class EnvironmentControllerTest extends Specification {
     }
 
     @Unroll
-    def "should turn off heat and fan when temp becomes *currentTemp"() {
+    def "should turn off heat and fan when temp becomes #currentTemp"() {
         given:
         fakeHVAC.currentTemp = currentTemp
         fakeHVAC.heatOn = true
@@ -66,7 +66,7 @@ class EnvironmentControllerTest extends Specification {
     }
 
     @Unroll
-    def "should turn on cool when temp is *currentTemp >= 76"() {
+    def "should turn on cool when temp is #currentTemp >= 76"() {
         given:
         fakeHVAC.currentTemp = currentTemp
         fakeHVAC.heatOn = false
@@ -83,5 +83,52 @@ class EnvironmentControllerTest extends Specification {
 
         where:
         currentTemp << [76, 85, 94]
+    }
+
+    @Unroll
+    def "should turn off cool and fan when temp becomes #currentTemp"() {
+        given:
+        fakeHVAC.currentTemp = currentTemp
+        fakeHVAC.heatOn = false
+        fakeHVAC.coolOn = true
+        fakeHVAC.fanOn = true
+
+        when:
+        environmentController.tick();
+
+        then:
+        !fakeHVAC.heatOn
+        !fakeHVAC.coolOn
+        !fakeHVAC.fanOn
+
+        where:
+        currentTemp << [65, 70, 75]
+    }
+
+    def "should increment tick minutes when tick is called"() {
+        given:
+        environmentController.tickMinutesSinceHeatFanOff = 0;
+        environmentController.tickMinutesSinceCoolFanOff = 0;
+
+        when:
+        5.times{ environmentController.tick() };
+
+        then:
+        environmentController.tickMinutesSinceHeatFanOff == 5;
+        environmentController.tickMinutesSinceCoolFanOff == 5;
+    }
+
+    def "should reset when fan off"() {
+        given:
+        environmentController.tickMinutesSinceHeatFanOff = 5;
+        environmentController.tickMinutesSinceCoolFanOff = 5;
+        fakeHVAC.currentTemp = 70
+
+        when:
+        environmentController.tick();
+
+        then:
+        environmentController.tickMinutesSinceHeatFanOff == 0;
+        environmentController.tickMinutesSinceCoolFanOff == 0;
     }
 }
