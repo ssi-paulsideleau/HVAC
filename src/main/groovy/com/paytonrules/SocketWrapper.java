@@ -11,7 +11,6 @@ import java.net.Socket;
 public class SocketWrapper implements java.lang.AutoCloseable {
   private int port;
   private ServerSocket serverSocket;
-  private Socket socket;
 
   private CommandProcessor processor;
 
@@ -27,20 +26,24 @@ public class SocketWrapper implements java.lang.AutoCloseable {
     String input=null;
     try {
       serverSocket = new ServerSocket(this.port);
-      socket = serverSocket.accept();
-      System.out.println("socket created "+socket);
 
-      PrintWriter out = new PrintWriter(socket.getOutputStream());
-      BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+      while (true) {
+        try (Socket socket = serverSocket.accept()) {
+          System.out.println("socket created " + socket);
 
-      // accept input message
-      input = in.readLine();
-      // echo message to caller
-      out.println(input);
+          try (PrintWriter out = new PrintWriter(socket.getOutputStream());
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));) {
+            // accept input message
+            input = in.readLine();
+            // echo message to caller
+            out.println(input);
 
-      processor.process(input);
+            processor.process(input);
 
-      out.flush();
+            out.flush();
+          }
+        }
+      }
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -48,13 +51,7 @@ public class SocketWrapper implements java.lang.AutoCloseable {
   }
 
   public void close() {
-    try {
-      System.out.println("closing SocketWrapper "+socket);
-      socket.close();
-      serverSocket.close();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+   
   }
 }
 
