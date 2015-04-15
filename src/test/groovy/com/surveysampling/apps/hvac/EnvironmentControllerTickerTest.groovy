@@ -15,6 +15,10 @@ class EnvironmentControllerTickerTest extends Specification {
     @Subject
     EnvironmentControllerTicker ticker = new EnvironmentControllerTicker(100L, controller)
 
+    def cleanup() {
+        ticker.stop()
+    }
+
     @Timeout(value = 30, unit=TimeUnit.SECONDS)
     def "should tick every 100 milliseconds"() {
         when:
