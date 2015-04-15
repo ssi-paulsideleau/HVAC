@@ -6,7 +6,6 @@ public class FanTimer {
     boolean started = false;
 
     FanTimer(int duration) {
-        ticks = duration;
         this.duration = duration;
     }
 
@@ -23,9 +22,5 @@ public class FanTimer {
 
     public boolean canRun() {
         return ticks <= 0 || !started;
-    }
-
-    public void setTicks(int ticks) {
-        this.ticks = ticks;
     }
 }
