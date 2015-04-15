@@ -37,8 +37,10 @@ public class SocketWrapper implements java.lang.AutoCloseable {
       input = in.readLine();
       // echo message to caller
       out.println(input);
-      out.flush();
+
       processor.process(input);
+
+      out.flush();
 
     } catch (Exception e) {
       e.printStackTrace();
