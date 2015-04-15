@@ -2,15 +2,15 @@ package com.surveysampling.apps.hvac.hardware;
 
 import com.paytonrules.SocketWrapper;
 
-public class EnvironmentController {
+public class EnvironmentController implements IEnvironmentController {
     private HVAC hvac;
 
     private static final int HEAT_FAN_COOL_DOWN_PERIOD = 5;
     private static final int COOL_FAN_COOL_DOWN_PERIOD = 3;
     FanTimer heaterFanTimer;
     FanTimer coolerFanTimer;
-    private int min = 65;
-    private int max = 75;
+    private volatile int min = 65;
+    private volatile int max = 75;
     private boolean heatOn = false;
     private boolean coolOn = false;
 

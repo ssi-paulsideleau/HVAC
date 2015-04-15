@@ -1,7 +1,6 @@
 package com.surveysampling.apps.hvac
 
 import com.surveysampling.apps.hvac.hardware.EnvironmentController
-import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 

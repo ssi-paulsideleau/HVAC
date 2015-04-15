@@ -21,5 +21,10 @@ public class HVACDriver {
         }
 
 //        EnvironmentControllerLocator.environmentController.stopServer();
+        EnvironmentControllerTicker ticker = new EnvironmentControllerTicker(60000, EnvironmentControllerLocator.environmentController);
+        EnvironmentControllerLocator.ticker = ticker;
+
+        ticker.start();
+        ticker.join();
     }
 }
