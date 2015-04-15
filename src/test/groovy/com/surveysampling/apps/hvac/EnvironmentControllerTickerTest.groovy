@@ -74,5 +74,15 @@ class EnvironmentControllerTickerTest extends Specification {
         void tick() {
             durations.add(new Date())
         }
+
+        @Override
+        void setMin(int min) {
+
+        }
+
+        @Override
+        void setMax(int max) {
+
+        }
     }
 }

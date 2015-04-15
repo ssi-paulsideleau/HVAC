@@ -4,7 +4,8 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 class HVACCommandProcessorTest extends Specification {
-    def uut = new HVACCommandProcessor()
+    FakeEnvironmentController controller = new FakeEnvironmentController()
+    def uut = new HVACCommandProcessor(controller)
 
     def "should reject garbage message"() {
         expect:
@@ -30,6 +31,8 @@ class HVACCommandProcessorTest extends Specification {
         uut.process(message) == "OK"
         uut.lastMin == min
         uut.lastMax == max
+        controller.getMin() == min
+        controller.getMax() == max
 
         where:
         min|max

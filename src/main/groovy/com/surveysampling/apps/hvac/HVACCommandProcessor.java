@@ -1,18 +1,23 @@
 package com.surveysampling.apps.hvac;
 
 import com.surveysampling.apps.hvac.hardware.CommandProcessor;
+import com.surveysampling.apps.hvac.hardware.IEnvironmentController;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class HVACCommandProcessor implements CommandProcessor {
+    private IEnvironmentController controller;
+    private int lastMax;
     private int lastMin;
+
+    public HVACCommandProcessor(IEnvironmentController controller) {
+        this.controller = controller;
+    }
 
     public int getLastMax() {
         return lastMax;
     }
-
-    private int lastMax;
 
     public int getLastMin() {
         return lastMin;
@@ -45,6 +50,9 @@ public class HVACCommandProcessor implements CommandProcessor {
         if (min < 0 || max < 0) {
             return false;
         }
+
+        controller.setMin(min);
+        controller.setMax(max);
         return true;
     }
 

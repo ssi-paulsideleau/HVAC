@@ -1,7 +1,7 @@
 package com.surveysampling.apps.hvac.hardware;
 
-import com.paytonrules.FakeCommandProcessor;
 import com.paytonrules.SocketWrapper;
+import com.surveysampling.apps.hvac.HVACCommandProcessor;
 
 public class EnvironmentController implements IEnvironmentController {
     private HVAC hvac;
@@ -80,7 +80,7 @@ public class EnvironmentController implements IEnvironmentController {
 
     public void setServerPortAndStart(int port) {
         socketWrapper = new SocketWrapper(port);
-        socketWrapper.setProcessor(new FakeCommandProcessor());
+        socketWrapper.setProcessor(new HVACCommandProcessor(this));
         socketThread = new Thread() {
             public void run() {
                 socketWrapper.start();
