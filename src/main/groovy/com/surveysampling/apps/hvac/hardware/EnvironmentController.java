@@ -70,14 +70,6 @@ public class EnvironmentController implements IEnvironmentController {
         }
     }
 
-    public int getMin() {
-        return min;
-    }
-
-    public int getMax() {
-        return max;
-    }
-
     public void setMin(int min) {
         this.min = min;
     }
