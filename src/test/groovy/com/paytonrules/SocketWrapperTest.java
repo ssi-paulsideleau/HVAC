@@ -1,20 +1,24 @@
 package com.paytonrules;
 
 import org.junit.Test;
-import java.io.PrintWriter;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
-import java.net.Socket;
-import java.net.InetAddress;
-import java.net.ConnectException;
 
-import static org.junit.Assert.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ConnectException;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import static org.junit.Assert.assertEquals;
 
 public class SocketWrapperTest {
+
+  private final FakeCommandProcessor processor = new FakeCommandProcessor();
 
   @Test
   public void ItCanStartASocketAtAPort() throws Exception {
     try(SocketWrapper socket = new SocketWrapper(5000)) {
+      String data = "Test";
       StartSocket(socket);
 
       // Try to connect
@@ -25,9 +29,10 @@ public class SocketWrapperTest {
         try(Socket client = new Socket(host.getHostName(), 5000)) {
           connected = true;
 
-          String dataWritten = WriteToSocket(client, "Test\n");
+          String dataWritten = WriteToSocket(client, data+"\n");
 
           assertEquals("Test", dataWritten);
+
         } catch(ConnectException e) {
           Thread.sleep(100);
           retries++;
@@ -38,12 +43,15 @@ public class SocketWrapperTest {
       if (retries >= 5) {
         throw new Exception();
       }
+
+      assertEquals(data,processor.getMessage());
     }
   }
 
   private void StartSocket(SocketWrapper socket) {
       new Thread() {
         public void run() {
+          socket.setProcessor(processor);
           socket.start();
         }
       }.start();
