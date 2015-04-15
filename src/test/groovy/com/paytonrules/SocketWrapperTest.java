@@ -9,7 +9,7 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class SocketWrapperTest {
 
@@ -44,7 +44,8 @@ public class SocketWrapperTest {
         throw new Exception();
       }
 
-      assertEquals(data,processor.getMessage());
+      System.out.println("data is " + data + " and processor is " + processor.getMessage());
+      assertEquals(data, processor.getMessage());
     }
   }
 
