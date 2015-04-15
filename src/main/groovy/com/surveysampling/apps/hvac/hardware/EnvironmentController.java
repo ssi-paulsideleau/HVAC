@@ -71,10 +71,12 @@ public class EnvironmentController implements IEnvironmentController {
     }
 
     public void setMin(int min) {
+        System.out.println("setting min="+min);
         this.min = min;
     }
 
     public void setMax(int max) {
+        System.out.println("setting max="+max);
         this.max = max;
     }
 

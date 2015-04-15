@@ -38,7 +38,9 @@ public class SocketWrapper implements java.lang.AutoCloseable {
             // echo message to caller
             out.println(input);
 
-            processor.process(input);
+            System.out.println("input for process: " + input);
+            if(input!=null && input.length()>0)
+              processor.process(input);
 
             out.flush();
           }
