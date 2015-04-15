@@ -8,6 +8,11 @@ class EnvironmentControllerTest extends Specification {
     FakeHVAC fakeHVAC = new FakeHVAC()
     EnvironmentController environmentController = new EnvironmentController(fakeHVAC);
 
+    def setup() {
+        environmentController.min = 65
+        environmentController.max = 75
+    }
+
     @Unroll
     def "should do nothing when temp is #currentTemp"() {
         given:

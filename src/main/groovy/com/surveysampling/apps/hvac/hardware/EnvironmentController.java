@@ -26,9 +26,9 @@ public class EnvironmentController implements IEnvironmentController {
     public void tick() {
         heaterFanTimer.decrementTicks();
         coolerFanTimer.decrementTicks();
+        turnOffIfInRange();
         turnOnHeatWhenTooCold();
         turnOnCoolIfTooHot();
-        turnOffIfInRange();
     }
 
     private void turnOnHeatWhenTooCold() {
