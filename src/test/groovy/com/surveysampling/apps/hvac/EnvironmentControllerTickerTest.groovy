@@ -27,15 +27,16 @@ class EnvironmentControllerTickerTest extends Specification {
         ticker.stop()
 
         then: "it should have at least executed 10 times in a second"
-        controller.durations.size() >= 10
+        PollingConditions pollingConditions = new PollingConditions(timeout: 5, initialDelay: 1)
 
-        and: "thread sleeping is not precise but something is wrong if it ended up running too often"
-        controller.durations.size() <= 20
+        pollingConditions.eventually {
+            controller.durations.size() >= 10
+            controller.durations.size() <= 20
 
-        and: "time intervals should at least be 100 milliseconds apart"
-        for (int i = 1; i < controller.durations.size; i++ ) {
-            long diff = controller.durations[i].time - controller.durations[i - 1].time
-            diff >= 100
+            for (int i = 1; i < controller.durations.size; i++ ) {
+                long diff = controller.durations[i].time - controller.durations[i - 1].time
+                assert diff >= 100
+            }
         }
     }
 
