@@ -1,15 +1,36 @@
 package com.surveysampling.apps.hvac;
 
 import com.paytonrules.SocketWrapper;
-import com.surveysampling.apps.hvac.hardware.DummyHVAC;
 import com.surveysampling.apps.hvac.hardware.EnvironmentController;
+import com.surveysampling.apps.hvac.hardware.HVAC;
 
 public class HVACDriver {
 
     private SocketWrapper socketWrapper;
     public static void main(String[] args) {
 
-        EnvironmentControllerLocator.environmentController = new EnvironmentController(new DummyHVAC());
+        EnvironmentControllerLocator.environmentController = new EnvironmentController(new HVAC() {
+            @Override
+            public void heat(boolean on) {
+
+            }
+
+            @Override
+            public void cool(boolean on) {
+
+            }
+
+            @Override
+            public void fan(boolean on) {
+
+            }
+
+            @Override
+            public int temp() {
+                return 0;
+            }
+        });
+
         if(args.length>=2) {
             System.out.println("setting min="+args[0]+", max="+Integer.parseInt(args[1]));
             EnvironmentControllerLocator.environmentController.setMin(Integer.parseInt(args[0]));
