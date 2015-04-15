@@ -44,7 +44,7 @@ public class SocketWrapperTest {
         throw new Exception();
       }
 
-      assertEquals(data, processor.getMessage());
+      assertEquals("data:" + data + " msg: " + processor.getMessage(), data, processor.getMessage());
     }
   }
 
